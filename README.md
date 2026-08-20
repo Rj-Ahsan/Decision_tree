@@ -1,66 +1,232 @@
-# Titanic Survival Prediction Using Decision Tree
+# 🚢 Titanic Survival Prediction Using Decision Tree
 
-## 🔗 Dataset
+A Machine Learning classification project that predicts whether a passenger survived the **Titanic disaster** using a **Decision Tree Classifier**.
 
-The dataset used in this project is the **Titanic dataset** from Kaggle:  
-[Titanic: Machine Learning from Disaster](https://www.kaggle.com/c/titanic/data)
+The project demonstrates a complete machine learning workflow, including data preprocessing, feature engineering, outlier handling, feature scaling, model training, and hyperparameter optimization.
 
-- Features include `PassengerId, Name, Sex, Age, SibSp, Parch, Ticket, Fare, Cabin, Embarked`.
-- Target variable: `Survived` (0 = No, 1 = Yes)
+## 🎯 Project Objective
 
----
+The objective is to predict the `Survived` target variable:
 
-## 📊 Data Preprocessing
+* `0` → Did not survive
+* `1` → Survived
 
-1. **Label Encoding**
-   - Converted categorical features `Sex` and `Embarked` to numeric using `LabelEncoder`.
+The project uses passenger information such as age, gender, family information, fare, and embarkation point to build the predictive model.
 
-2. **Dropping irrelevant columns**
-   - Removed `Cabin`, `Name`, `Ticket`, `PassengerId`.
+## 📊 Dataset
 
-3. **Handling missing values**
-   - `Age` missing values filled with **mean**.
+The project uses the **Titanic: Machine Learning from Disaster** dataset from Kaggle.
 
-4. **Feature Engineering**
-   - `FamilySize` = `SibSp + Parch + 1`  
-   - `IsAlone` = 1 if `FamilySize` = 1 else 0
+### Features
 
-5. **Skewed features & outliers**
-   - Log transformation applied to `Fare`.  
-   - Outliers in `Fare` capped using the **IQR method**.
+The original dataset contains:
 
-6. **Feature Scaling**
-   - StandardScaler applied to numeric features.
+* `PassengerId`
+* `Name`
+* `Sex`
+* `Age`
+* `SibSp`
+* `Parch`
+* `Ticket`
+* `Fare`
+* `Cabin`
+* `Embarked`
 
----
+### Target
 
-## 🌳 Model Training
+```text
+Survived
+```
 
-- **Algorithm:** Decision Tree Classifier
-- **Default Model Accuracy:** `replace_with_default_accuracy`
+## 🔄 Machine Learning Workflow
 
-### Hyperparameter Tuning
+```text
+Titanic Dataset
+       ↓
+Data Exploration
+       ↓
+Data Preprocessing
+       ↓
+Missing Value Handling
+       ↓
+Feature Engineering
+       ↓
+Outlier Treatment
+       ↓
+Feature Scaling
+       ↓
+Decision Tree
+       ↓
+GridSearchCV
+       ↓
+Model Evaluation
+```
 
-- Used `GridSearchCV` to find the best combination:
+## 🧹 Data Preprocessing
+
+Several preprocessing techniques were applied to prepare the dataset.
+
+### Categorical Encoding
+
+`Sex` and `Embarked` were converted into numerical values using **LabelEncoder**.
+
+### Irrelevant Features
+
+The following columns were removed:
+
+```text
+PassengerId
+Name
+Ticket
+Cabin
+```
+
+### Missing Values
+
+Missing `Age` values were handled using the mean.
+
+## ⚙️ Feature Engineering
+
+Two additional features were created:
+
+### FamilySize
 
 ```python
-parameter = {
-    'criterion': ['gini', 'entropy', 'log_loss'],
-    'max_depth': [None, 3, 5, 7, 10],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-    'max_features': [None, 'sqrt', 'log2']
-}
-Best hyperparameters found:
+FamilySize = SibSp + Parch + 1
+```
 
-criterion = entropy
-max_depth = 7
-max_features = sqrt
+This represents the total number of family members traveling with the passenger.
+
+### IsAlone
+
+Passengers were categorized based on whether they were traveling alone:
+
+```text
+FamilySize = 1 → IsAlone = 1
+FamilySize > 1 → IsAlone = 0
+```
+
+These engineered features help the model capture additional relationships within the passenger data.
+
+## 📈 Feature Transformation
+
+### Fare Transformation
+
+The `Fare` feature was log-transformed to reduce skewness.
+
+### Outlier Handling
+
+Outliers in `Fare` were capped using the **IQR method**.
+
+### Feature Scaling
+
+`StandardScaler` was applied to numeric features.
+
+## 🌳 Model
+
+The primary algorithm used is:
+
+**Decision Tree Classifier**
+
+Decision Trees recursively split the dataset based on feature values to make classification decisions.
+
+## 🔧 Hyperparameter Tuning
+
+`GridSearchCV` was used to search for an effective combination of Decision Tree hyperparameters.
+
+The parameters explored included:
+
+```python
+criterion = ['gini', 'entropy', 'log_loss']
+
+max_depth = [None, 3, 5, 7, 10]
+
+min_samples_split = [2, 5, 10]
+
+min_samples_leaf = [1, 2, 4]
+
+max_features = [None, 'sqrt', 'log2']
+```
+
+### Best Hyperparameters
+
+The repository's current experiment identifies:
+
+```text
+criterion        = entropy
+max_depth        = 7
+max_features     = sqrt
 min_samples_leaf = 4
 min_samples_split = 5
-📈 Model Evaluation
-Tuned Model Test Accuracy: replace_with_tuned_accuracy
-💡 Key Observations
-Feature engineering (FamilySize, IsAlone) improved predictive power.
-Log-transform and IQR capping stabilized Fare distribution and reduced skew.
-Hyperparameter tuning significantly improved accuracy over the default Decision Tree.
+```
+
+## 📌 Key Observations
+
+* Feature engineering with **FamilySize** and **IsAlone** provides additional predictive information.
+* Log transformation helps reduce the skewness of `Fare`.
+* IQR-based capping helps control the effect of extreme fare values.
+* Hyperparameter tuning provides a more optimized Decision Tree configuration.
+
+## 🛠️ Technologies
+
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* Matplotlib
+* Seaborn
+* Jupyter Notebook
+
+## 📂 Project Structure
+
+```text
+Decision_tree/
+│
+├── Decision_tree(titanic).ipynb
+├── README.md
+└── ...
+```
+
+## 🚀 Getting Started
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Rj-Ahsan/Decision_tree.git
+cd Decision_tree
+```
+
+### Install dependencies
+
+```bash
+pip install pandas numpy scikit-learn matplotlib seaborn jupyter
+```
+
+### Run the notebook
+
+```bash
+jupyter notebook "Decision_tree(titanic).ipynb"
+```
+
+Run the notebook cells sequentially to reproduce the preprocessing, feature engineering, model training, hyperparameter tuning, and evaluation.
+
+## 🔮 Future Improvements
+
+* Compare Decision Tree with Random Forest and Gradient Boosting
+* Add confusion matrix visualization
+* Evaluate precision, recall, and F1-score
+* Perform feature importance analysis
+* Add cross-validation comparisons
+* Deploy the trained model as an API or web application
+
+## 👨‍💻 Author
+
+**Ahsan Tanveer**
+
+BS Artificial Intelligence | AI/ML Engineer
+
+GitHub: [@Rj-Ahsan](https://github.com/Rj-Ahsan)
+
+---
+
+⭐ If you find this project useful, consider giving the repository a star!
